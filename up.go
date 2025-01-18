@@ -11,6 +11,7 @@ import (
 
 type UpClient struct {
 	httpClient http.Client
+	baseUrl    string
 }
 
 // TODO make this a struct
@@ -18,14 +19,15 @@ type UpParams map[string]string
 
 func NewClient() *UpClient {
 	return &UpClient{
-		http.Client{
+		httpClient: http.Client{
 			Timeout: time.Second * 5,
 		},
+		baseUrl: "https://api.up.com.au/api/v1",
 	}
 }
 
 func (up *UpClient) GetAccounts(token string, params UpParams) (*AccountsResponse, error) {
-	url := "https://api.up.com.au/api/v1/accounts"
+	url := fmt.Sprintf("%v/accounts", up.baseUrl)
 	var accountsResp AccountsResponse
 	err := get(up, url, token, params, &accountsResp)
 	if err != nil {
@@ -36,7 +38,7 @@ func (up *UpClient) GetAccounts(token string, params UpParams) (*AccountsRespons
 }
 
 func (up *UpClient) GetTransactions(accountId string, token string, params UpParams) (*TransactionsResponse, error) {
-	url := fmt.Sprintf("https://api.up.com.au/api/v1/accounts/%v/transactions", accountId)
+	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
 	var transactionsResp TransactionsResponse
 	err := get(up, url, token, params, &transactionsResp)
 	if err != nil {
