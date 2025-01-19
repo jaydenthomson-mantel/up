@@ -20,7 +20,7 @@ func TestGetAccounts(t *testing.T) {
 	}
 
 	upClient := NewClient()
-	accounts, err := upClient.GetAccounts(config.Token, map[string]string{"page[size]": "1"})
+	accounts, err := upClient.GetAccounts(config.Token, &PaginationParams{pageSize: "1"})
 
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
@@ -39,7 +39,7 @@ func TestGetTransactions(t *testing.T) {
 	}
 
 	upClient := NewClient()
-	transactions, err := upClient.GetTransactions(config.AccountId, config.Token, map[string]string{"page[size]": "1"})
+	transactions, err := upClient.GetTransactions(config.AccountId, config.Token, &PaginationParams{pageSize: "1"})
 
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
