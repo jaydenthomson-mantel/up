@@ -60,7 +60,7 @@ func get[T any](up *UpClient, url string, token string, params QueryParams, t *T
 		return err
 	}
 
-	addParams(req, token, params)
+	addToRequest(req, token, params)
 	resp, err := up.httpClient.Do(req)
 	if err != nil {
 		return err
@@ -94,7 +94,7 @@ func validate(token string, params QueryParams) error {
 	return nil
 }
 
-func addParams(req *http.Request, token string, params QueryParams) {
+func addToRequest(req *http.Request, token string, params QueryParams) {
 	req.Header.Add("Authorization", "Bearer "+token)
 	q := req.URL.Query()
 	m := params.ToMap()
