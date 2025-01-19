@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -14,8 +13,10 @@ type UpClient struct {
 	baseUrl    string
 }
 
-// TODO make this a struct
-type UpParams map[string]string
+type QueryParams interface {
+	Validate() error
+	ToMap() map[string]string
+}
 
 func NewClient() *UpClient {
 	return &UpClient{
@@ -26,7 +27,7 @@ func NewClient() *UpClient {
 	}
 }
 
-func (up *UpClient) GetAccounts(token string, params UpParams) (*AccountsResponse, error) {
+func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
 	url := fmt.Sprintf("%v/accounts", up.baseUrl)
 	var accountsResp AccountsResponse
 	err := get(up, url, token, params, &accountsResp)
@@ -37,7 +38,7 @@ func (up *UpClient) GetAccounts(token string, params UpParams) (*AccountsRespons
 	return &accountsResp, nil
 }
 
-func (up *UpClient) GetTransactions(accountId string, token string, params UpParams) (*TransactionsResponse, error) {
+func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
 	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
 	var transactionsResp TransactionsResponse
 	err := get(up, url, token, params, &transactionsResp)
@@ -48,8 +49,8 @@ func (up *UpClient) GetTransactions(accountId string, token string, params UpPar
 	return &transactionsResp, nil
 }
 
-func get[T any](up *UpClient, url string, token string, params UpParams, t *T) error {
-	err := validateParams(token, params)
+func get[T any](up *UpClient, url string, token string, params QueryParams, t *T) error {
+	err := validate(token, params)
 	if err != nil {
 		return err
 	}
@@ -79,13 +80,10 @@ func get[T any](up *UpClient, url string, token string, params UpParams, t *T) e
 	return nil
 }
 
-func validateParams(token string, params UpParams) error {
-	pageSizeStr, hit := params["page[size]"]
-	if hit {
-		pageSize, err := strconv.Atoi(pageSizeStr)
-		if err != nil || pageSize < 1 || pageSize > 100 {
-			return PageSizeError{badPageSize: pageSizeStr}
-		}
+func validate(token string, params QueryParams) error {
+	err := params.Validate()
+	if err != nil {
+		return nil
 	}
 
 	if false {
@@ -95,10 +93,11 @@ func validateParams(token string, params UpParams) error {
 	return nil
 }
 
-func addParams(req *http.Request, token string, params UpParams) {
+func addParams(req *http.Request, token string, params QueryParams) {
 	req.Header.Add("Authorization", "Bearer "+token)
 	q := req.URL.Query()
-	for key, value := range params {
+	m := params.ToMap()
+	for key, value := range m {
 		q.Add(key, value)
 	}
 	req.URL.RawQuery = q.Encode()
