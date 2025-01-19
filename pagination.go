@@ -1,9 +1,16 @@
 package up
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 type PaginationParams struct {
 	pageSize string
+}
+
+type PageSizeError struct {
+	badPageSize string
 }
 
 func (params PaginationParams) Validate() error {
@@ -24,4 +31,8 @@ func (params PaginationParams) ToMap() map[string]string {
 		m["page[size]"] = params.pageSize
 	}
 	return m
+}
+
+func (p PageSizeError) Error() string {
+	return fmt.Sprintf("page size %v not allowed", p.badPageSize)
 }

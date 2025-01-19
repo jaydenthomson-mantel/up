@@ -81,13 +81,14 @@ func get[T any](up *UpClient, url string, token string, params QueryParams, t *T
 }
 
 func validate(token string, params QueryParams) error {
-	err := params.Validate()
+	err := validateToken(token)
 	if err != nil {
-		return nil
+		return err
 	}
 
-	if false {
-		// TODO add validation for token format
+	err = params.Validate()
+	if err != nil {
+		return err
 	}
 
 	return nil
