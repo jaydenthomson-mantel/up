@@ -6,19 +6,19 @@ import (
 )
 
 type PaginationParams struct {
-	pageSize string
+	PageSize string
 }
 
 type PageSizeError struct {
-	badPageSize string
+	BadPageSize string
 }
 
 func (params PaginationParams) Validate() error {
-	pageSizeStr := params.pageSize
+	pageSizeStr := params.PageSize
 	if pageSizeStr != "" {
 		pageSize, err := strconv.Atoi(pageSizeStr)
 		if err != nil || pageSize < 1 || pageSize > 100 {
-			return PageSizeError{badPageSize: pageSizeStr}
+			return PageSizeError{BadPageSize: pageSizeStr}
 		}
 	}
 
@@ -27,12 +27,12 @@ func (params PaginationParams) Validate() error {
 
 func (params PaginationParams) ToMap() map[string]string {
 	m := make(map[string]string)
-	if params.pageSize != "" {
-		m["page[size]"] = params.pageSize
+	if params.PageSize != "" {
+		m["page[size]"] = params.PageSize
 	}
 	return m
 }
 
 func (p PageSizeError) Error() string {
-	return fmt.Sprintf("page size %v not allowed", p.badPageSize)
+	return fmt.Sprintf("page size %v not allowed", p.BadPageSize)
 }
