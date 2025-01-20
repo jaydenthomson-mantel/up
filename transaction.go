@@ -1,6 +1,9 @@
 package up
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Transaction struct {
 	Type       string `json:"type"`
@@ -34,4 +37,15 @@ type TransactionsResponse struct {
 		Prev any    `json:"prev"`
 		Next string `json:"next"`
 	} `json:"links"`
+}
+
+func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
+	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
+	var transactionsResp TransactionsResponse
+	err := get(up, url, token, params, &transactionsResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &transactionsResp, nil
 }

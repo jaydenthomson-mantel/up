@@ -1,6 +1,7 @@
 package up
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -36,4 +37,15 @@ type AccountsResponse struct {
 		Prev string `json:"prev"`
 		Next string `json:"next"`
 	}
+}
+
+func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
+	url := fmt.Sprintf("%v/accounts", up.baseUrl)
+	var accountsResp AccountsResponse
+	err := get(up, url, token, params, &accountsResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &accountsResp, nil
 }

@@ -2,7 +2,6 @@ package up
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -25,28 +24,6 @@ func NewClient() *UpClient {
 		},
 		baseUrl: "https://api.up.com.au/api/v1",
 	}
-}
-
-func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
-	url := fmt.Sprintf("%v/accounts", up.baseUrl)
-	var accountsResp AccountsResponse
-	err := get(up, url, token, params, &accountsResp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &accountsResp, nil
-}
-
-func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
-	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
-	var transactionsResp TransactionsResponse
-	err := get(up, url, token, params, &transactionsResp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &transactionsResp, nil
 }
 
 func get[T any](up *UpClient, url string, token string, params QueryParams, t *T) error {
