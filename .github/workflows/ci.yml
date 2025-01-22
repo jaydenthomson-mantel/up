@@ -26,3 +26,13 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+    
+    - name: Integration Test
+      env:
+        INTEGRATION_TESTING_CONFIG: ${{ secrets.INTEGRATION_TESTING_CONFIG }}
+      run: |
+        mkdir .config
+        cd .config
+        echo "$INTEGRATION_TESTING_CONFIG" > testing.json
+        cd ../
+        go test -v ./... --tags integration
