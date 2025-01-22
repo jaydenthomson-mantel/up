@@ -92,16 +92,6 @@ if err != nil {
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Roadmap
-- [ ] Add unit testing
-- [ ] Add integration testing to CI workflow
-- [ ] Add "next page" functionality
-
-
-See the [open issues](https://github.com/jaydenthomson-mantel/up/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Contributing
 Will be keen for contributors once the package is more mature. If you have 
 any recommendations or problems you'd like to resolve please add an issue.
