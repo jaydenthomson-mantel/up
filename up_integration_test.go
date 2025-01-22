@@ -4,7 +4,6 @@ package up
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 )
@@ -28,9 +27,6 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Got error from function. Error: %v", err)
 		return
 	}
-
-	jsonAccounts, _ := json.MarshalIndent(accounts, "", "  ")
-	fmt.Println(string(jsonAccounts))
 }
 
 func TestGetTransactions(t *testing.T) {
@@ -45,9 +41,6 @@ func TestGetTransactions(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
-	} else {
-		jsonTransactions, _ := json.MarshalIndent(transactions, "", "  ")
-		fmt.Println(string(jsonTransactions))
 	}
 }
 
