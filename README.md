@@ -45,6 +45,13 @@ initialize a go.mod file.
 go mod init github.com/OWNER_NAME/REPO_NAME
 ```
 
+#### Tokens
+Up API requests require a personal access token. To generate one, please see 
+Up's [authentication docs](https://developer.up.com.au/#authentication)
+
+> [!NOTE]
+> The library does not log or persist your tokens.
+
 ### Installation
 Use the go get command to add the package as a dependency to your module
 ```sh
@@ -91,13 +98,6 @@ if err != nil {
 }
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Tokens
-Up API requests require a personal access token. To generate one, please see 
-Up's [authentication docs](https://developer.up.com.au/#authentication)
-
-> [!NOTE]  
-> The library does not log or persist your tokens.
 
 ## Contributing
 Will be keen for contributors once the package is more mature. If you have 
