@@ -4,6 +4,9 @@
   <a href="https://up.com.au/">
     <img src="images/up-logo.svg" alt="Logo" width="250" height="250">
   </a>
+  <a href="https://go.dev/">
+    <img src="images/go-logo.png" alt="Logo" width="250" height="250">
+  </a>
 
   <h3 align="center">Up</h3>
 
