@@ -43,6 +43,10 @@ func (params PaginationParams) ToMap() map[string]string {
 
 func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedData[T], error) {
 	url := page.Links.Next
+	if url == "" {
+		return nil, nil
+	}
+
 	var nextPage PagedData[T]
 	err := get(up, url, token, nil, &nextPage)
 	if err != nil {
