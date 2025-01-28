@@ -38,6 +38,15 @@ func get[T any](up *UpClient, url string, token string, params QueryParams, t *T
 	}
 
 	addToRequest(req, token, params)
+	err = getResponse(up, req, t)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func getResponse[T any](up *UpClient, req *http.Request, t *T) error {
 	resp, err := up.httpClient.Do(req)
 	if err != nil {
 		return err
