@@ -41,6 +41,17 @@ func (params PaginationParams) ToMap() map[string]string {
 	return m
 }
 
+func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedData[T], error) {
+	url := page.Links.Next
+	var nextPage PagedData[T]
+	err := get(up, url, token, nil, &nextPage)
+	if err != nil {
+		return nil, err
+	}
+
+	return &nextPage, err
+}
+
 func (p PageSizeError) Error() string {
 	return fmt.Sprintf("page size %v not allowed", p.BadPageSize)
 }
