@@ -38,15 +38,6 @@ func get[T any](up *UpClient, url string, token string, params QueryParams, t *T
 	}
 
 	addToRequest(req, token, params)
-	err = getResponse(up, req, t)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func getResponse[T any](up *UpClient, req *http.Request, t *T) error {
 	resp, err := up.httpClient.Do(req)
 	if err != nil {
 		return err
@@ -58,12 +49,7 @@ func getResponse[T any](up *UpClient, req *http.Request, t *T) error {
 		return err
 	}
 
-	err = json.Unmarshal(body, t)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return json.Unmarshal(body, t)
 }
 
 func validate(token string, params QueryParams) error {
@@ -72,28 +58,21 @@ func validate(token string, params QueryParams) error {
 		return err
 	}
 
-	err = params.Validate()
-	if err != nil {
-		return err
+	if params != nil {
+		return params.Validate()
 	}
 
 	return nil
 }
 
 func addToRequest(req *http.Request, token string, params QueryParams) {
-	addAuthHeader(req, token)
-	addParams(req, params)
-}
-
-func addAuthHeader(req *http.Request, token string) {
 	req.Header.Add("Authorization", "Bearer "+token)
-}
-
-func addParams(req *http.Request, params QueryParams) {
-	q := req.URL.Query()
-	m := params.ToMap()
-	for key, value := range m {
-		q.Add(key, value)
+	if params != nil {
+		q := req.URL.Query()
+		m := params.ToMap()
+		for key, value := range m {
+			q.Add(key, value)
+		}
+		req.URL.RawQuery = q.Encode()
 	}
-	req.URL.RawQuery = q.Encode()
 }
