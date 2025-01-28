@@ -81,7 +81,15 @@ func validate(token string, params QueryParams) error {
 }
 
 func addToRequest(req *http.Request, token string, params QueryParams) {
+	addAuthHeader(req, token)
+	addParams(req, params)
+}
+
+func addAuthHeader(req *http.Request, token string) {
 	req.Header.Add("Authorization", "Bearer "+token)
+}
+
+func addParams(req *http.Request, params QueryParams) {
 	q := req.URL.Query()
 	m := params.ToMap()
 	for key, value := range m {
