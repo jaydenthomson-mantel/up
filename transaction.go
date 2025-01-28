@@ -31,13 +31,7 @@ type Transaction struct {
 	} `json:"links"`
 }
 
-type TransactionsResponse struct {
-	Data  []Transaction `json:"data"`
-	Links struct {
-		Prev any    `json:"prev"`
-		Next string `json:"next"`
-	} `json:"links"`
-}
+type TransactionsResponse PagedData[Transaction]
 
 func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
 	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)

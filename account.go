@@ -31,13 +31,7 @@ type Account struct {
 	} `json:"links"`
 }
 
-type AccountsResponse struct {
-	Data  []Account `json:"data"`
-	Links struct {
-		Prev string `json:"prev"`
-		Next string `json:"next"`
-	}
-}
+type AccountsResponse PagedData[Account]
 
 func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
 	url := fmt.Sprintf("%v/accounts", up.baseUrl)
