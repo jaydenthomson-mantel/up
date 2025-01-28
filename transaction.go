@@ -35,11 +35,5 @@ type TransactionsResponse PagedData[Transaction]
 
 func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
 	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
-	var transactionsResp TransactionsResponse
-	err := get(up, url, token, params, &transactionsResp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &transactionsResp, nil
+	return get[TransactionsResponse](up, url, token, params)
 }

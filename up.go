@@ -26,30 +26,36 @@ func NewClient() *UpClient {
 	}
 }
 
-func get[T any](up *UpClient, url string, token string, params QueryParams, t *T) error {
+func get[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
 	err := validate(token, params)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	addToRequest(req, token, params)
 	resp, err := up.httpClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return json.Unmarshal(body, t)
+	var t T
+	err = json.Unmarshal(body, &t)
+	if err != nil {
+		return nil, err
+	}
+
+	return &t, nil
 }
 
 func validate(token string, params QueryParams) error {

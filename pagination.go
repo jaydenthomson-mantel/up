@@ -47,13 +47,7 @@ func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedD
 		return nil, nil
 	}
 
-	var nextPage PagedData[T]
-	err := get(up, url, token, nil, &nextPage)
-	if err != nil {
-		return nil, err
-	}
-
-	return &nextPage, err
+	return get[PagedData[T]](up, url, token, nil)
 }
 
 func (p PageSizeError) Error() string {
