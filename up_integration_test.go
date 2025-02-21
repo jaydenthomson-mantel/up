@@ -21,11 +21,28 @@ func TestGetAccounts(t *testing.T) {
 	}
 
 	upClient := NewClient()
-	_, err = upClient.GetAccounts(config.Token, &PaginationParams{PageSize: "1"})
 
+	accounts, err := upClient.GetAccounts(config.Token, &PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
 		return
+	}
+
+	if accounts.Data[0].ID == "" {
+		t.Errorf("Id for first account fetched is empty.")
+	}
+
+	nextAccount, err := GetNextPage(upClient, (*PagedData[Account])(accounts), config.Token)
+	if err != nil {
+		t.Errorf("Got error from next page function. Error: %v", err)
+	}
+
+	if nextAccount.Data[0].ID == "" {
+		t.Errorf("Id for second account fetched is empty.")
+	}
+
+	if accounts.Data[0].ID == nextAccount.Data[0].ID {
+		t.Errorf("Id for first and second account fetched matched.")
 	}
 }
 
@@ -37,10 +54,27 @@ func TestGetTransactions(t *testing.T) {
 	}
 
 	upClient := NewClient()
-	_, err = upClient.GetTransactions(config.AccountId, config.Token, &PaginationParams{PageSize: "1"})
 
+	transaction, err := upClient.GetTransactions(config.AccountId, config.Token, &PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
+	}
+
+	if transaction.Data[0].ID == "" {
+		t.Errorf("Id for first transaction fetched is empty.")
+	}
+
+	nextTransaction, err := GetNextPage(upClient, (*PagedData[Transaction])(transaction), config.Token)
+	if err != nil {
+		t.Errorf("Got error from next page function. Error: %v", err)
+	}
+
+	if nextTransaction.Data[0].ID == "" {
+		t.Errorf("Id for second transaction fetched is empty.")
+	}
+
+	if transaction.Data[0].ID == nextTransaction.Data[0].ID {
+		t.Errorf("Id for first and second transaction fetched matched.")
 	}
 }
 

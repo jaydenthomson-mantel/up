@@ -5,6 +5,14 @@ import (
 	"strconv"
 )
 
+type PagedData[T any] struct {
+	Data  []T `json:"data"`
+	Links struct {
+		Prev string `json:"prev"`
+		Next string `json:"next"`
+	}
+}
+
 type PaginationParams struct {
 	PageSize string
 }
@@ -31,6 +39,15 @@ func (params PaginationParams) ToMap() map[string]string {
 		m["page[size]"] = params.PageSize
 	}
 	return m
+}
+
+func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedData[T], error) {
+	url := page.Links.Next
+	if url == "" {
+		return nil, nil
+	}
+
+	return get[PagedData[T]](up, url, token, nil)
 }
 
 func (p PageSizeError) Error() string {
