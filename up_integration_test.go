@@ -22,17 +22,17 @@ func TestGetAccounts(t *testing.T) {
 
 	upClient := NewClient()
 
-	accounts, err := upClient.GetAccounts(config.Token, &PaginationParams{PageSize: "1"})
+	firstAccount, err := upClient.GetAccounts(config.Token, &PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
 		return
 	}
 
-	if accounts.Data[0].ID == "" {
+	if firstAccount.Data[0].ID == "" {
 		t.Errorf("Id for first account fetched is empty.")
 	}
 
-	nextAccount, err := GetNextPage(upClient, (*PagedData[Account])(accounts), config.Token)
+	nextAccount, err := GetNextPage(upClient, (*PagedData[Account])(firstAccount), config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
@@ -41,8 +41,21 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for second account fetched is empty.")
 	}
 
-	if accounts.Data[0].ID == nextAccount.Data[0].ID {
+	if firstAccount.Data[0].ID == nextAccount.Data[0].ID {
 		t.Errorf("Id for first and second account fetched matched.")
+	}
+
+	accounts, err := GetAllPages(upClient, (*PagedData[Account])(firstAccount), config.Token)
+	if err != nil {
+		t.Errorf("Got error fetching all pages. Error: %v", err)
+	}
+
+	if accounts[0].Data[0].ID == "" || accounts[1].Data[0].ID == "" {
+		t.Errorf("Some of the ID's fetched are empty when fetching all pages. Error: %v", err)
+	}
+
+	if accounts[0].Data[0].ID == accounts[1].Data[0].ID {
+		t.Errorf("First ID and second ID are the same when fetching all pages. Error: %v", err)
 	}
 }
 
