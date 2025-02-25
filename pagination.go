@@ -8,7 +8,7 @@ type PagedData[T any] struct {
 	} `json:"links"`
 }
 
-func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedData[T], error) {
+func (page *PagedData[T]) GetNextPage(up *UpClient, token string) (*PagedData[T], error) {
 	url := page.Links.Next
 	if url == "" {
 		return nil, nil
@@ -17,7 +17,7 @@ func GetNextPage[T any](up *UpClient, page *PagedData[T], token string) (*PagedD
 	return get[PagedData[T]](up, url, token, nil)
 }
 
-func GetAllPages[T any](up *UpClient, page *PagedData[T], token string) ([]*PagedData[T], error) {
+func (page *PagedData[T]) GetAllPages(up *UpClient, token string) ([]*PagedData[T], error) {
 	nextPageUrl := page.Links.Next
 	pageList := []*PagedData[T]{page}
 

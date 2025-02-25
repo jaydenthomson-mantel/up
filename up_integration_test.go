@@ -32,7 +32,7 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for first account fetched is empty.")
 	}
 
-	nextAccount, err := GetNextPage(upClient, (*PagedData[Account])(firstAccount), config.Token)
+	nextAccount, err := (*PagedData[Account])(firstAccount).GetNextPage(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
@@ -45,7 +45,7 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for first and second account fetched matched.")
 	}
 
-	accounts, err := GetAllPages(upClient, (*PagedData[Account])(firstAccount), config.Token)
+	accounts, err := (*PagedData[Account])(firstAccount).GetAllPages(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error fetching all pages. Error: %v", err)
 	}
@@ -77,7 +77,7 @@ func TestGetTransactions(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	nextTransaction, err := GetNextPage(upClient, (*PagedData[Transaction])(transaction), config.Token)
+	nextTransaction, err := (*PagedData[Transaction])(transaction).GetNextPage(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
