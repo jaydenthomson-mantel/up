@@ -10,7 +10,7 @@ type PagedData[T any] struct {
 	Links struct {
 		Prev string `json:"prev"`
 		Next string `json:"next"`
-	}
+	} `json:"links"`
 }
 
 type PaginationParams struct {
