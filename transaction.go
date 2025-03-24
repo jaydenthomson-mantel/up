@@ -37,3 +37,8 @@ func (up *UpClient) GetTransactions(accountId string, token string, params *Pagi
 	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
 	return get[TransactionsResponse](up, url, token, params)
 }
+
+func (up *UpClient) GetTransactionMaxPage(accountId string, token string) (*TransactionsResponse, error) {
+	params := &PaginationParams{PageSize: maxPageSize}
+	return up.GetTransactions(accountId, token, params)
+}
