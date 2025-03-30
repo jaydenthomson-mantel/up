@@ -1,5 +1,3 @@
-//go:build integration
-
 package up
 
 import (
@@ -10,6 +8,7 @@ import (
 )
 
 const configErrorMessage = "Got error from config read. Error: %v"
+const skipIntTestMessage = "Skipping integration tests, set environment variable INTEGRATION."
 
 type TestConfig struct {
 	Token     string `json:"token"`
@@ -17,6 +16,7 @@ type TestConfig struct {
 }
 
 func TestGetAccounts(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
 	t.Parallel()
 	config, err := GetTestConfig()
 	if err != nil {
@@ -74,6 +74,7 @@ func TestGetAccounts(t *testing.T) {
 }
 
 func TestGetTransactions(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
 	t.Parallel()
 	config, err := GetTestConfig()
 	if err != nil {
@@ -107,6 +108,7 @@ func TestGetTransactions(t *testing.T) {
 }
 
 func TestGetTransactionMax(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
 	t.Parallel()
 	config, err := GetTestConfig()
 	if err != nil {
@@ -139,6 +141,12 @@ func TestGetTransactionMax(t *testing.T) {
 				"Troubleshoot to ensure there are enough transactions to query.",
 			maxPageSizeConversion,
 			pageLength)
+	}
+}
+
+func SkipIfNotIntegrationTest(t *testing.T) {
+	if os.Getenv("INTEGRATION") == "" {
+		t.Skip(skipIntTestMessage)
 	}
 }
 

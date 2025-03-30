@@ -35,4 +35,4 @@ jobs:
         cd .config
         echo "$INTEGRATION_TESTING_CONFIG" > testing.json
         cd ../
-        go test -v ./... --tags integration
+        INTEGRATION=1 go test -v ./...
