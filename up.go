@@ -26,7 +26,8 @@ func NewClient() *UpClient {
 	}
 }
 
-func get[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
+// get makes HTTP GET requests to the Up API
+func (up *UpClient) get(url string, token string, params QueryParams) ([]byte, error) {
 	err := validate(token, params)
 	if err != nil {
 		return nil, err
@@ -44,18 +45,38 @@ func get[T any](up *UpClient, url string, token string, params QueryParams) (*T,
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
+}
+
+// GetPaged implements the common.Getter interface for pagination
+func (up *UpClient) GetPaged(url string, token string) (interface{}, error) {
+	body, err := up.get(url, token, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var t T
-	err = json.Unmarshal(body, &t)
+	var result map[string]interface{}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// getAndUnmarshal is a package-level generic function for making typed API requests
+func getAndUnmarshal[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
+	body, err := up.get(url, token, params)
 	if err != nil {
 		return nil, err
 	}
 
-	return &t, nil
+	var result T
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 func validate(token string, params QueryParams) error {

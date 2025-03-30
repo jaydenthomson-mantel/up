@@ -5,6 +5,9 @@ import (
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/jaydenthomson-mantel/up/common"
+	"github.com/jaydenthomson-mantel/up/models"
 )
 
 const configErrorMessage = "Got error from config read. Error: %v"
@@ -36,7 +39,7 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for first account fetched is empty.")
 	}
 
-	nextAccount, err := (*PagedData[Account])(firstAccount).GetNextPage(upClient, config.Token)
+	nextAccount, err := (*common.PagedData[models.Account])(firstAccount).GetNextPage(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
@@ -49,7 +52,7 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for first and second account fetched matched.")
 	}
 
-	accounts, err := (*PagedData[Account])(firstAccount).GetAllPages(upClient, config.Token)
+	accounts, err := (*common.PagedData[models.Account])(firstAccount).GetAllPages(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error fetching all pages. Error: %v", err)
 	}
@@ -93,7 +96,7 @@ func TestGetTransactions(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	nextTransaction, err := (*PagedData[Transaction])(transaction).GetNextPage(upClient, config.Token)
+	nextTransaction, err := (*common.PagedData[models.Transaction])(transaction).GetNextPage(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}

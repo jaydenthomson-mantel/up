@@ -16,7 +16,7 @@ func (page *PagedData[T]) GetNextPage(up *UpClient, token string) (*PagedData[T]
 		return nil, nil
 	}
 
-	return get[PagedData[T]](up, url, token, nil)
+	return getAndUnmarshal[PagedData[T]](up, url, token, nil)
 }
 
 func (page *PagedData[T]) GetAllPages(up *UpClient, token string) ([]*PagedData[T], error) {
@@ -24,7 +24,7 @@ func (page *PagedData[T]) GetAllPages(up *UpClient, token string) ([]*PagedData[
 	pageList := []*PagedData[T]{page}
 
 	for nextPageUrl != "" {
-		nextPage, err := get[PagedData[T]](up, nextPageUrl, token, nil)
+		nextPage, err := getAndUnmarshal[PagedData[T]](up, nextPageUrl, token, nil)
 		if err != nil {
 			return nil, err
 		}
