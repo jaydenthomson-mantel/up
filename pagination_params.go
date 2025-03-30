@@ -6,6 +6,8 @@ import (
 	"github.com/jaydenthomson-mantel/up/errors"
 )
 
+const maxPageSize = "100"
+
 type PaginationParams struct {
 	PageSize string
 }
