@@ -1,6 +1,10 @@
 package up
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/jaydenthomson-mantel/up/errors"
+)
 
 type PaginationParams struct {
 	PageSize string
@@ -11,7 +15,7 @@ func (params PaginationParams) Validate() error {
 	if pageSizeStr != "" {
 		pageSize, err := strconv.Atoi(pageSizeStr)
 		if err != nil || pageSize < 1 || pageSize > 100 {
-			return PageSizeError{BadPageSize: pageSizeStr}
+			return errors.PageSizeError{BadPageSize: pageSizeStr}
 		}
 	}
 

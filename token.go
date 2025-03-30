@@ -2,13 +2,9 @@ package up
 
 import (
 	"regexp"
+
+	"github.com/jaydenthomson-mantel/up/errors"
 )
-
-type BearerFormatError struct{}
-
-func (p BearerFormatError) Error() string {
-	return "the bearer token was in an unknown format"
-}
 
 func validateToken(token string) error {
 	match, err := regexp.MatchString("^up:yeah:[a-zA-Z0-9]+$", token)
@@ -16,7 +12,7 @@ func validateToken(token string) error {
 		return err
 	}
 	if !match {
-		return BearerFormatError{}
+		return errors.BearerFormatError{}
 	}
 
 	return nil
