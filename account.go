@@ -38,6 +38,31 @@ func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*Accoun
 	return get[AccountsResponse](up, url, token, params)
 }
 
+func (up *UpClient) GetNextAccounts(accountResponse *AccountsResponse, token string) (*AccountsResponse, error) {
+	nextAccounts, err := (*PagedData[Account])(accountResponse).GetNextPage(up, token)
+	return (*AccountsResponse)(nextAccounts), err
+}
+
+func (up *UpClient) GetAllAccounts(token string) ([]*AccountsResponse, error) {
+	accounts, err := up.GetAccountsMaxPage(token)
+	if err != nil {
+		return nil, err
+	}
+
+	allAccounts, err := (*PagedData[Account])(accounts).GetAllPages(up, token)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*AccountsResponse, len(allAccounts))
+	result[0] = accounts
+	for i, page := range allAccounts {
+		result[i] = (*AccountsResponse)(page)
+	}
+
+	return result, nil
+}
+
 func (up *UpClient) GetAccountsMaxPage(token string) (*AccountsResponse, error) {
 	params := &PaginationParams{PageSize: maxPageSize}
 	return up.GetAccounts(token, params)
