@@ -38,6 +38,11 @@ func (up *UpClient) GetTransactions(accountId string, token string, params *Pagi
 	return get[TransactionsResponse](up, url, token, params)
 }
 
+func (up *UpClient) GetNextTransactions(transactionResponse *TransactionsResponse, token string) (*TransactionsResponse, error) {
+	nextTransactions, err := (*PagedData[Transaction])(transactionResponse).GetNextPage(up, token)
+	return (*TransactionsResponse)(nextTransactions), err
+}
+
 func (up *UpClient) GetTransactionMaxPage(accountId string, token string) (*TransactionsResponse, error) {
 	params := &PaginationParams{PageSize: maxPageSize}
 	return up.GetTransactions(accountId, token, params)

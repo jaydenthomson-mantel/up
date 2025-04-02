@@ -85,7 +85,7 @@ func TestGetTransactions(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	nextTransaction, err := (*PagedData[Transaction])(transaction).GetNextPage(upClient, config.Token)
+	nextTransaction, err := upClient.GetNextTransactions(transaction, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
