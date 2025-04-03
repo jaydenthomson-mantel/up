@@ -1,7 +1,5 @@
 package up
 
-const maxPageSize = "100"
-
 type PagedData[T any] struct {
 	Data  []T `json:"data"`
 	Links struct {

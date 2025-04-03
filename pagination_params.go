@@ -2,6 +2,8 @@ package up
 
 import "strconv"
 
+const maxPageSize = "100"
+
 type PaginationParams struct {
 	PageSize string
 }
