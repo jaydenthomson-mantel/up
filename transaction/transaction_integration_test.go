@@ -1,22 +1,24 @@
-package up
+package transaction
 
 import (
 	"strconv"
 	"testing"
+
+	"github.com/jaydenthomson-mantel/up"
 )
 
 func TestGetTransactions(t *testing.T) {
-	SkipIfNotIntegrationTest(t)
+	up.SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig("./.config/testing.json")
+	config, err := up.GetTestConfig("../.config/testing.json")
 	if err != nil {
-		t.Errorf(ConfigErrorMessage, err)
+		t.Errorf(up.ConfigErrorMessage, err)
 		return
 	}
 
-	upClient := NewClient()
+	upClient := up.NewClient()
 
-	transaction, err := upClient.GetTransactions(config.AccountId, config.Token, &PaginationParams{PageSize: "1"})
+	transaction, err := GetTransactions(upClient, config.AccountId, config.Token, &up.PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
 	}
@@ -25,7 +27,7 @@ func TestGetTransactions(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	nextTransaction, err := upClient.GetNextTransactions(transaction, config.Token)
+	nextTransaction, err := GetNextTransactions(upClient, transaction, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
@@ -40,17 +42,17 @@ func TestGetTransactions(t *testing.T) {
 }
 
 func TestGetTransactionMax(t *testing.T) {
-	SkipIfNotIntegrationTest(t)
+	up.SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig("./.config/testing.json")
+	config, err := up.GetTestConfig("../.config/testing.json")
 	if err != nil {
-		t.Errorf(ConfigErrorMessage, err)
+		t.Errorf(up.ConfigErrorMessage, err)
 		return
 	}
 
-	upClient := NewClient()
+	upClient := up.NewClient()
 
-	maxPageTransactions, err := upClient.GetTransactionMaxPage(config.AccountId, config.Token)
+	maxPageTransactions, err := GetTransactionMaxPage(upClient, config.AccountId, config.Token)
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
 		return
@@ -60,7 +62,7 @@ func TestGetTransactionMax(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	maxPageSizeConversion, err := strconv.Atoi(MaxPageSize)
+	maxPageSizeConversion, err := strconv.Atoi(up.MaxPageSize)
 	if err != nil {
 		t.Errorf("Got error from maxPageSize conversion. Error: %v", err)
 	}
