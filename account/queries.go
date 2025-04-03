@@ -12,8 +12,8 @@ func GetAccounts(upClient *up.UpClient, token string, params *pagination.Paginat
 	return up.Get[AccountsResponse](upClient, url, token, params)
 }
 
-func GetNextAccounts(upClient *up.UpClient, accountResponse *AccountsResponse, token string) (*AccountsResponse, error) {
-	nextAccounts, err := (*pagination.PagedData[Account])(accountResponse).GetNextPage(upClient, token)
+func GetNextAccounts(upClient *up.UpClient, accountResp *AccountsResponse, token string) (*AccountsResponse, error) {
+	nextAccounts, err := (*pagination.PagedData[Account])(accountResp).GetNextPage(upClient, token)
 	return (*AccountsResponse)(nextAccounts), err
 }
 
