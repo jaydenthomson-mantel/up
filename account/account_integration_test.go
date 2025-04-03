@@ -1,19 +1,23 @@
-package up
+package account
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/jaydenthomson-mantel/up"
+)
 
 func TestGetAccounts(t *testing.T) {
-	SkipIfNotIntegrationTest(t)
+	up.SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig()
+	config, err := up.GetTestConfig("../.config/testing.json")
 	if err != nil {
-		t.Errorf(configErrorMessage, err)
+		t.Errorf(up.ConfigErrorMessage, err)
 		return
 	}
 
-	upClient := NewClient()
+	upClient := up.NewClient()
 
-	firstAccount, err := upClient.GetAccounts(config.Token, &PaginationParams{PageSize: "1"})
+	firstAccount, err := GetAccounts(upClient, config.Token, &up.PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from GetAccounts function. Error: %v", err)
 		return
@@ -23,7 +27,7 @@ func TestGetAccounts(t *testing.T) {
 		t.Errorf("Id for first account fetched is empty.")
 	}
 
-	nextAccount, err := upClient.GetNextAccounts(firstAccount, config.Token)
+	nextAccount, err := GetNextAccounts(upClient, firstAccount, config.Token)
 	if err != nil {
 		t.Errorf("Got error from next page function. Error: %v", err)
 	}
@@ -38,22 +42,22 @@ func TestGetAccounts(t *testing.T) {
 }
 
 func TestGetAllAccounts(t *testing.T) {
-	SkipIfNotIntegrationTest(t)
+	up.SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig()
+	config, err := up.GetTestConfig("../.config/testing.json")
 	if err != nil {
-		t.Errorf(configErrorMessage, err)
+		t.Errorf(up.ConfigErrorMessage, err)
 		return
 	}
 
-	upClient := NewClient()
+	upClient := up.NewClient()
 
-	_, err = upClient.GetAllAccounts(config.Token)
+	_, err = GetAllAccounts(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error fetching all pages. Error: %v", err)
 	}
 
-	accountsMaxPage, err := upClient.GetAccountsMaxPage(config.Token)
+	accountsMaxPage, err := GetAccountsMaxPage(upClient, config.Token)
 	if err != nil {
 		t.Errorf("Got error from GetAccounts function. Error: %v", err)
 		return

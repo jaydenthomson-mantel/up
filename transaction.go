@@ -34,8 +34,8 @@ type Transaction struct {
 type TransactionsResponse PagedData[Transaction]
 
 func (up *UpClient) GetTransactions(accountId string, token string, params *PaginationParams) (*TransactionsResponse, error) {
-	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
-	return get[TransactionsResponse](up, url, token, params)
+	url := fmt.Sprintf("%v/accounts/%v/transactions", up.BaseUrl, accountId)
+	return Get[TransactionsResponse](up, url, token, params)
 }
 
 func (up *UpClient) GetNextTransactions(transactionResponse *TransactionsResponse, token string) (*TransactionsResponse, error) {
@@ -44,6 +44,6 @@ func (up *UpClient) GetNextTransactions(transactionResponse *TransactionsRespons
 }
 
 func (up *UpClient) GetTransactionMaxPage(accountId string, token string) (*TransactionsResponse, error) {
-	params := &PaginationParams{PageSize: maxPageSize}
+	params := &PaginationParams{PageSize: MaxPageSize}
 	return up.GetTransactions(accountId, token, params)
 }

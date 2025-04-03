@@ -1,8 +1,10 @@
-package up
+package account
 
 import (
 	"fmt"
 	"time"
+
+	"github.com/jaydenthomson-mantel/up"
 )
 
 type Account struct {
@@ -31,25 +33,30 @@ type Account struct {
 	} `json:"links"`
 }
 
-type AccountsResponse PagedData[Account]
+type AccountsResponse up.PagedData[Account]
 
-func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
-	url := fmt.Sprintf("%v/accounts", up.baseUrl)
-	return get[AccountsResponse](up, url, token, params)
+func GetAccounts(upClient *up.UpClient, token string, params *up.PaginationParams) (*AccountsResponse, error) {
+	url := fmt.Sprintf("%v/accounts", upClient.BaseUrl)
+	return up.Get[AccountsResponse](upClient, url, token, params)
 }
 
-func (up *UpClient) GetNextAccounts(accountResponse *AccountsResponse, token string) (*AccountsResponse, error) {
-	nextAccounts, err := (*PagedData[Account])(accountResponse).GetNextPage(up, token)
+func GetNextAccounts(upClient *up.UpClient, accountResponse *AccountsResponse, token string) (*AccountsResponse, error) {
+	nextAccounts, err := (*up.PagedData[Account])(accountResponse).GetNextPage(upClient, token)
 	return (*AccountsResponse)(nextAccounts), err
 }
 
-func (up *UpClient) GetAllAccounts(token string) ([]*AccountsResponse, error) {
-	accounts, err := up.GetAccountsMaxPage(token)
+func GetAccountsMaxPage(upClient *up.UpClient, token string) (*AccountsResponse, error) {
+	params := &up.PaginationParams{PageSize: up.MaxPageSize}
+	return GetAccounts(upClient, token, params)
+}
+
+func GetAllAccounts(upClient *up.UpClient, token string) ([]*AccountsResponse, error) {
+	accounts, err := GetAccountsMaxPage(upClient, token)
 	if err != nil {
 		return nil, err
 	}
 
-	allAccounts, err := (*PagedData[Account])(accounts).GetAllPages(up, token)
+	allAccounts, err := (*up.PagedData[Account])(accounts).GetAllPages(upClient, token)
 	if err != nil {
 		return nil, err
 	}
@@ -61,9 +68,4 @@ func (up *UpClient) GetAllAccounts(token string) ([]*AccountsResponse, error) {
 	}
 
 	return result, nil
-}
-
-func (up *UpClient) GetAccountsMaxPage(token string) (*AccountsResponse, error) {
-	params := &PaginationParams{PageSize: maxPageSize}
-	return up.GetAccounts(token, params)
 }

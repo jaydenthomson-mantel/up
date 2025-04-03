@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-const configErrorMessage = "Got error from config read. Error: %v"
+const ConfigErrorMessage = "Got error from config read. Error: %v"
 const skipIntTestMessage = "Skipping integration tests, set environment variable INTEGRATION."
 
 type TestConfig struct {
@@ -14,9 +14,9 @@ type TestConfig struct {
 	AccountId string `json:"accountId"`
 }
 
-func GetTestConfig() (*TestConfig, error) {
+func GetTestConfig(fileName string) (*TestConfig, error) {
 	var config TestConfig
-	fileContent, err := os.ReadFile("./.config/testing.json")
+	fileContent, err := os.ReadFile(fileName)
 	if err != nil {
 		return nil, err
 	}

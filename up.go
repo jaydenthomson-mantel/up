@@ -9,7 +9,7 @@ import (
 
 type UpClient struct {
 	httpClient http.Client
-	baseUrl    string
+	BaseUrl    string
 }
 
 type QueryParams interface {
@@ -22,11 +22,11 @@ func NewClient() *UpClient {
 		httpClient: http.Client{
 			Timeout: time.Second * 5,
 		},
-		baseUrl: "https://api.up.com.au/api/v1",
+		BaseUrl: "https://api.up.com.au/api/v1",
 	}
 }
 
-func get[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
+func Get[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
 	err := validate(token, params)
 	if err != nil {
 		return nil, err

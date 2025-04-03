@@ -8,9 +8,9 @@ import (
 func TestGetTransactions(t *testing.T) {
 	SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig()
+	config, err := GetTestConfig("./.config/testing.json")
 	if err != nil {
-		t.Errorf(configErrorMessage, err)
+		t.Errorf(ConfigErrorMessage, err)
 		return
 	}
 
@@ -42,9 +42,9 @@ func TestGetTransactions(t *testing.T) {
 func TestGetTransactionMax(t *testing.T) {
 	SkipIfNotIntegrationTest(t)
 	t.Parallel()
-	config, err := GetTestConfig()
+	config, err := GetTestConfig("./.config/testing.json")
 	if err != nil {
-		t.Errorf(configErrorMessage, err)
+		t.Errorf(ConfigErrorMessage, err)
 		return
 	}
 
@@ -60,7 +60,7 @@ func TestGetTransactionMax(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	maxPageSizeConversion, err := strconv.Atoi(maxPageSize)
+	maxPageSizeConversion, err := strconv.Atoi(MaxPageSize)
 	if err != nil {
 		t.Errorf("Got error from maxPageSize conversion. Error: %v", err)
 	}
