@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/jaydenthomson-mantel/up"
+	"github.com/jaydenthomson-mantel/up/pagination"
 )
 
 func TestGetTransactions(t *testing.T) {
@@ -18,7 +19,7 @@ func TestGetTransactions(t *testing.T) {
 
 	upClient := up.NewClient()
 
-	transaction, err := GetTransactions(upClient, config.AccountId, config.Token, &up.PaginationParams{PageSize: "1"})
+	transaction, err := GetTransactions(upClient, config.AccountId, config.Token, &pagination.PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
 	}
@@ -62,7 +63,7 @@ func TestGetTransactionMax(t *testing.T) {
 		t.Errorf("Id for first transaction fetched is empty.")
 	}
 
-	maxPageSizeConversion, err := strconv.Atoi(up.MaxPageSize)
+	maxPageSizeConversion, err := strconv.Atoi(pagination.MaxPageSize)
 	if err != nil {
 		t.Errorf("Got error from maxPageSize conversion. Error: %v", err)
 	}

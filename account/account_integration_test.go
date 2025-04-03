@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/jaydenthomson-mantel/up"
+	"github.com/jaydenthomson-mantel/up/pagination"
 )
 
 func TestGetAccounts(t *testing.T) {
@@ -17,7 +18,7 @@ func TestGetAccounts(t *testing.T) {
 
 	upClient := up.NewClient()
 
-	firstAccount, err := GetAccounts(upClient, config.Token, &up.PaginationParams{PageSize: "1"})
+	firstAccount, err := GetAccounts(upClient, config.Token, &pagination.PaginationParams{PageSize: "1"})
 	if err != nil {
 		t.Errorf("Got error from GetAccounts function. Error: %v", err)
 		return
