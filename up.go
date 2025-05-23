@@ -24,19 +24,29 @@ func NewClient() *UpClient {
 	}
 }
 
-func (up *UpClient) GetAccounts(token string) (*models.PagedAccount, error) {
+func (up *UpClient) GetAccounts(token string) (*models.PageAccount, error) {
 	url := fmt.Sprintf("%v/accounts", up.baseUrl)
-	return get[models.PagedAccount](up, url, token)
+	return get[models.PageAccount](up, url, token)
 }
 
-func (up *UpClient) GetTransactions(accountId *string, token string) (*models.PagedTransaction, error) {
+func (up *UpClient) GetAccount(accountId string, token string) (*models.AccountRecord, error) {
+	url := fmt.Sprintf("%v/accounts/%v", up.baseUrl, accountId)
+	return get[models.AccountRecord](up, url, token)
+}
+
+func (up *UpClient) GetTransactions(accountId *string, token string) (*models.TransactionPage, error) {
 	var url string
 	if accountId == nil {
 		url = fmt.Sprintf("%v/transactions", up.baseUrl)
 	} else {
 		url = fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, *accountId)
 	}
-	return get[models.PagedTransaction](up, url, token)
+	return get[models.TransactionPage](up, url, token)
+}
+
+func (up *UpClient) GetTransaction(transactionId string, token string) (*models.TransactionRecord, error) {
+	url := fmt.Sprintf("%v/transactions/%v", up.baseUrl, transactionId)
+	return get[models.TransactionRecord](up, url, token)
 }
 
 func get[T any](up *UpClient, url string, token string) (*T, error) {

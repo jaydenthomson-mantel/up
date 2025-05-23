@@ -22,4 +22,5 @@ type Account struct {
 	} `json:"relationships"`
 }
 
-type PagedAccount PagedData[Account]
+type PageAccount PagedData[Account]
+type AccountRecord RecordData[Account]

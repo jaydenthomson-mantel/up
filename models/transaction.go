@@ -22,4 +22,5 @@ type Transaction struct {
 	} `json:"relationships"`
 }
 
-type PagedTransaction PagedData[Transaction]
+type TransactionPage PagedData[Transaction]
+type TransactionRecord RecordData[Transaction]

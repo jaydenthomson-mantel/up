@@ -86,6 +86,88 @@ func TestGetTransactionsWithoutAccountId(t *testing.T) {
 	}
 }
 
+func TestGetAccount(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
+	t.Parallel()
+	config, err := GetTestConfig()
+	if err != nil {
+		t.Errorf(configErrorMessage, err)
+		return
+	}
+
+	upClient := NewClient()
+
+	// First get accounts to get a valid account ID
+	accounts, err := upClient.GetAccounts(config.Token)
+	if err != nil {
+		t.Errorf("Got error from GetAccounts function. Error: %v", err)
+		return
+	}
+
+	if len(accounts.Data) == 0 {
+		t.Errorf("No accounts fetched.")
+		return
+	}
+
+	accountId := accounts.Data[0].ID
+
+	// Now test GetAccount with the first account ID
+	account, err := upClient.GetAccount(accountId, config.Token)
+	if err != nil {
+		t.Errorf("Got error from GetAccount function. Error: %v", err)
+		return
+	}
+
+	if account.Data.ID == "" {
+		t.Errorf("Id for account fetched is empty.")
+	}
+
+	if account.Data.ID != accountId {
+		t.Errorf("Account ID mismatch. Expected: %s, Got: %s", accountId, account.Data.ID)
+	}
+}
+
+func TestGetTransaction(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
+	t.Parallel()
+	config, err := GetTestConfig()
+	if err != nil {
+		t.Errorf(configErrorMessage, err)
+		return
+	}
+
+	upClient := NewClient()
+
+	// First get transactions to get a valid transaction ID
+	transactions, err := upClient.GetTransactions(nil, config.Token)
+	if err != nil {
+		t.Errorf("Got error from GetTransactions function. Error: %v", err)
+		return
+	}
+
+	if len(transactions.Data) == 0 {
+		t.Errorf("No transactions fetched.")
+		return
+	}
+
+	transactionId := transactions.Data[0].ID
+
+	// Now test GetTransaction with the first transaction ID
+	transaction, err := upClient.GetTransaction(transactionId, config.Token)
+	if err != nil {
+		t.Errorf("Got error from GetTransaction function. Error: %v", err)
+		return
+	}
+
+	if transaction.Data.ID == "" {
+		t.Errorf("Id for transaction fetched is empty.")
+	}
+
+	if transaction.Data.ID != transactionId {
+		t.Errorf("Transaction ID mismatch. Expected: %s, Got: %s", transactionId, transaction.Data.ID)
+	}
+}
+
 func SkipIfNotIntegrationTest(t *testing.T) {
 	if os.Getenv("INTEGRATION") == "" {
 		t.Skip(skipIntTestMessage)
