@@ -13,11 +13,6 @@ type UpClient struct {
 	baseUrl    string
 }
 
-type QueryParams interface {
-	Validate() error
-	ToMap() map[string]string
-}
-
 func NewClient() *UpClient {
 	return &UpClient{
 		httpClient: http.Client{
