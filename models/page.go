@@ -1,4 +1,4 @@
-package up
+package models
 
 type PagedData[T any] struct {
 	Data  []T `json:"data"`

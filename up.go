@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/jaydenthomson-mantel/up/models"
 )
 
 type UpClient struct {
@@ -22,19 +24,19 @@ func NewClient() *UpClient {
 	}
 }
 
-func (up *UpClient) GetAccounts(token string) (*PagedAccount, error) {
+func (up *UpClient) GetAccounts(token string) (*models.PagedAccount, error) {
 	url := fmt.Sprintf("%v/accounts", up.baseUrl)
-	return get[PagedAccount](up, url, token)
+	return get[models.PagedAccount](up, url, token)
 }
 
-func (up *UpClient) GetTransactions(accountId *string, token string) (*PagedTransaction, error) {
+func (up *UpClient) GetTransactions(accountId *string, token string) (*models.PagedTransaction, error) {
 	var url string
 	if accountId == nil {
 		url = fmt.Sprintf("%v/transactions", up.baseUrl)
 	} else {
 		url = fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, *accountId)
 	}
-	return get[PagedTransaction](up, url, token)
+	return get[models.PagedTransaction](up, url, token)
 }
 
 func get[T any](up *UpClient, url string, token string) (*T, error) {

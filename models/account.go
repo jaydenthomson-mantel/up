@@ -1,10 +1,10 @@
-package up
+package models
 
 import (
 	"time"
 )
 
-type Transaction struct {
+type Account struct {
 	Type       string `json:"type"`
 	ID         string `json:"id"`
 	Attributes struct {
@@ -19,15 +19,7 @@ type Transaction struct {
 		CreatedAt time.Time `json:"createdAt"`
 	} `json:"attributes"`
 	Relationships struct {
-		Transactions struct {
-			Links struct {
-				Related string `json:"related"`
-			} `json:"links"`
-		} `json:"transactions"`
 	} `json:"relationships"`
-	Links struct {
-		Self string `json:"self"`
-	} `json:"links"`
 }
 
-type PagedTransaction PagedData[Transaction]
+type PagedAccount PagedData[Account]
