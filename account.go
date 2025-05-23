@@ -1,7 +1,6 @@
 package up
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -31,14 +30,4 @@ type Account struct {
 	} `json:"links"`
 }
 
-type AccountsResponse PagedData[Account]
-
-func (up *UpClient) GetAccounts(token string, params *PaginationParams) (*AccountsResponse, error) {
-	url := fmt.Sprintf("%v/accounts", up.baseUrl)
-	return get[AccountsResponse](up, url, token, params)
-}
-
-func (up *UpClient) GetAccountsMaxPage(token string) (*AccountsResponse, error) {
-	params := &PaginationParams{PageSize: maxPageSize}
-	return up.GetAccounts(token, params)
-}
+type PagedAccount PagedData[Account]

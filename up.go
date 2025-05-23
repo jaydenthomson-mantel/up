@@ -2,6 +2,7 @@ package up
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -26,18 +27,23 @@ func NewClient() *UpClient {
 	}
 }
 
-func get[T any](up *UpClient, url string, token string, params QueryParams) (*T, error) {
-	err := validate(token, params)
-	if err != nil {
-		return nil, err
-	}
+func (up *UpClient) GetAccounts(token string) (*PagedAccount, error) {
+	url := fmt.Sprintf("%v/accounts", up.baseUrl)
+	return get[PagedAccount](up, url, token)
+}
 
+func (up *UpClient) GetTransactions(accountId string, token string) (*PagedTransaction, error) {
+	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
+	return get[PagedTransaction](up, url, token)
+}
+
+func get[T any](up *UpClient, url string, token string) (*T, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	addToRequest(req, token, params)
+	req.Header.Add("Authorization", "Bearer "+token)
 	resp, err := up.httpClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -56,29 +62,4 @@ func get[T any](up *UpClient, url string, token string, params QueryParams) (*T,
 	}
 
 	return &t, nil
-}
-
-func validate(token string, params QueryParams) error {
-	err := validateToken(token)
-	if err != nil {
-		return err
-	}
-
-	if params != nil {
-		return params.Validate()
-	}
-
-	return nil
-}
-
-func addToRequest(req *http.Request, token string, params QueryParams) {
-	req.Header.Add("Authorization", "Bearer "+token)
-	if params != nil {
-		q := req.URL.Query()
-		m := params.ToMap()
-		for key, value := range m {
-			q.Add(key, value)
-		}
-		req.URL.RawQuery = q.Encode()
-	}
 }
