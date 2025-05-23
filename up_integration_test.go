@@ -47,13 +47,42 @@ func TestGetTransactions(t *testing.T) {
 
 	upClient := NewClient()
 
-	transaction, err := upClient.GetTransactions(config.AccountId, config.Token)
+	transaction, err := upClient.GetTransactions(&config.AccountId, config.Token)
 	if err != nil {
 		t.Errorf("Got error from function. Error: %v", err)
+		return
 	}
 
 	if transaction.Data[0].ID == "" {
 		t.Errorf("Id for first transaction fetched is empty.")
+	}
+}
+
+func TestGetTransactionsWithoutAccountId(t *testing.T) {
+	SkipIfNotIntegrationTest(t)
+	t.Parallel()
+	config, err := GetTestConfig()
+	if err != nil {
+		t.Errorf(configErrorMessage, err)
+		return
+	}
+
+	upClient := NewClient()
+
+	// Pass nil as accountId to test the optional parameter
+	transactions, err := upClient.GetTransactions(nil, config.Token)
+	if err != nil {
+		t.Errorf("Got error from function when accountId is nil. Error: %v", err)
+		return
+	}
+
+	if len(transactions.Data) == 0 {
+		t.Errorf("No transactions fetched when accountId is nil.")
+		return
+	}
+
+	if transactions.Data[0].ID == "" {
+		t.Errorf("Id for first transaction fetched is empty when accountId is nil.")
 	}
 }
 

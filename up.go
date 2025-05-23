@@ -27,8 +27,13 @@ func (up *UpClient) GetAccounts(token string) (*PagedAccount, error) {
 	return get[PagedAccount](up, url, token)
 }
 
-func (up *UpClient) GetTransactions(accountId string, token string) (*PagedTransaction, error) {
-	url := fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, accountId)
+func (up *UpClient) GetTransactions(accountId *string, token string) (*PagedTransaction, error) {
+	var url string
+	if accountId == nil {
+		url = fmt.Sprintf("%v/transactions", up.baseUrl)
+	} else {
+		url = fmt.Sprintf("%v/accounts/%v/transactions", up.baseUrl, *accountId)
+	}
 	return get[PagedTransaction](up, url, token)
 }
 
